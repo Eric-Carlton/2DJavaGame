@@ -43,7 +43,7 @@ public class Map {
 	}
 	
 	public Tile tileAt(int y, int x){
-		if(y > rows - 1 || x> cols -1 || y < 0 || x < 0){
+		if(y > rows -  1 || x > cols - 1 || y < 0 || x < 0){
 			return null;
 		}
 		else return tiles[y][x];
@@ -58,14 +58,20 @@ public class Map {
 	}
 	
 	public Base getBaseAtPoint(Point p){
-		int row = (int)p.y / tileSize.height;
-		int col = (int)p.x / tileSize.height;
+		Point tileLoc = getTileLocationOfPointInFullMap(p);
 		for(Base b : bases){
-			if(b.isTileInBase(row, col)){
+			if(b.isTileInBase(tileLoc.y, tileLoc.x)){
 				return b;
 			}
 		}
 		return null;
+	}
+	
+	public Point getTileLocationOfPointInFullMap(Point p){
+		int row = (int)p.y / tileSize.height;
+		int col = (int)p.x / tileSize.height;
+		
+		return new Point(col, row);
 	}
 	
 	public void dump(){

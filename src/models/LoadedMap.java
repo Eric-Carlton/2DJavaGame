@@ -11,46 +11,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-enum TileType{
-	Grass{
-		@Override
-		public String toString(){
-			return "0";
-		}
-	},
-	CastleTopLeft{
-		@Override
-		public String toString(){
-			return "3";
-		}
-	},
-	CastleTopRight{
-		@Override
-		public String toString(){
-			return "4";
-		}
-	},
-	CastleBottomLeft{
-		@Override
-		public String toString(){
-			return "5";
-		}
-	},
-	CastleBottomRight{
-		@Override
-		public String toString(){
-			return "6";
-		}
-	},
-	Rock{
-		@Override
-		public String toString(){
-			return "7";
-		}
-	}
-		
-}
-
 public class LoadedMap extends Map {
 
 	private static final String grassImageLoc = "Assets/short_grass.jpeg";

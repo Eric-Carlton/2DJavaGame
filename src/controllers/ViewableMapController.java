@@ -16,16 +16,22 @@ public class ViewableMapController {
 	private Map viewableArea;
 	private Point pointInMapForTopLeftOfViewable;
 	
+	private boolean isOnUpperBorder;
+	private boolean isOnRightBorder;
+	private boolean isOnLeftBorder;
+	private boolean isOnLowerBorder;
 	
 	public ViewableMapController(LoadedMap map, Dimension dim, Point start) throws BadDimensionException{
 		this.map = map;
 		this.dim = dim;
 		this.start = start;
 		this.viewableArea = null;
+		
 		getViewableMapForStartingPoint();
 	}
 	
 	public Map getViewableArea(){
+		setBorderBools();
 		return this.viewableArea;
 	}
 	
@@ -47,6 +53,38 @@ public class ViewableMapController {
 	
 	public Point getPointInMapForTopLeftOfViewable(){
 		return pointInMapForTopLeftOfViewable;
+	}
+	
+	public Point getCenterPoint(){
+		return new Point(dim.width, dim.height);
+	}
+	
+	public LoadedMap getMap(){
+		return map;
+	}
+	
+	public boolean isOnUpperBorder(){
+		return isOnUpperBorder;
+	}
+	
+	public boolean isOnLowerBorder(){
+		return isOnLowerBorder;
+	}
+	
+	public boolean isOnLeftBorder(){
+		return isOnLeftBorder;
+	}
+	
+	public boolean isOnRightBorder(){
+		return isOnRightBorder;
+	}
+	
+	public Dimension getDimensions(){
+		return dim;
+	}
+	
+	public void dump(){
+		System.out.printf("\nViewable Map\n-----------------\nLeft border: %b\nRight border:%b\nUpper border: %b\nLower border: %b\nCenter Point\n\tX: %d\n\tY: %d\nUpper Left\n\tX: %d\n\tY: %d\n",isOnLeftBorder,isOnRightBorder,isOnUpperBorder,isOnLowerBorder,getCenterPoint().x, getCenterPoint().y, pointInMapForTopLeftOfViewable.x,pointInMapForTopLeftOfViewable.y);
 	}
 	
 	private void getViewableMapForStartingPoint() throws BadDimensionException{
@@ -101,5 +139,23 @@ public class ViewableMapController {
 		}
 		
 		return corrected;
+	}
+	
+	private void setBorderBools(){
+		if(start.x - dim.width <= 0)
+			isOnLeftBorder = true;
+		else isOnLeftBorder = false;
+		
+		if(start.x + dim.width >= map.getCols() - 1)
+			isOnRightBorder = true;
+		else isOnRightBorder = false;
+		
+		if(start.y - dim.height <= 0)
+			isOnUpperBorder = true;
+		else isOnUpperBorder = false;
+		
+		if(start.y + dim.height >= map.getRows() - 1)
+			isOnLowerBorder = true;
+		else isOnLowerBorder = false;
 	}
 }

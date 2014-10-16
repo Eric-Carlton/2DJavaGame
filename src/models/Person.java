@@ -8,6 +8,7 @@ public class Person {
 	public int strength;
 	public int hp;
 	public int defense;
+	public int speed;
 	
 	public Point position;
 	
@@ -21,39 +22,44 @@ public class Person {
 	protected BufferedImage attackingForward;
 	protected BufferedImage attackingBackward;
 	
-	protected Direction direction;
+	private Direction direction;
 	
 	BufferedImage currentImage;
 	
-	public Person(int strength, int hp, int defense, Point position){
+	public Person(int strength, int hp, int defense, int speed, Point position){
 		this.strength = strength;
 		this.hp = hp;
 		this.defense = defense;
 		this.position = position;
 		this.direction = Direction.Up;
+		this.speed = speed;
 	}
 	
-	public void moveLeft(){
+	public Direction getDirection(){
+		return direction;
+	}
+	
+	public void moveLeft(boolean turnSprite){
 			position.x--;
-			if(direction != Direction.Left)
+			if(turnSprite && direction != Direction.Left)
 				setDirection(Direction.Left);
 	}
 	
-	public void moveRight(){
+	public void moveRight(boolean turnSprite){
 		position.x++;
-		if(direction != Direction.Right)
+		if(turnSprite && direction != Direction.Right)
 			setDirection(Direction.Right);
 	}
 	
-	public void moveUp(){
+	public void moveUp(boolean turnSprite){
 		position.y--;
-		if(direction != Direction.Up)
+		if(turnSprite && direction != Direction.Up)
 			setDirection(Direction.Up);
 	}
 	
-	public void moveDown(){
+	public void moveDown(boolean turnSprite){
 		position.y++;
-		if(direction != Direction.Down)
+		if(turnSprite && direction != Direction.Down)
 			setDirection(Direction.Down);
 	}
 	

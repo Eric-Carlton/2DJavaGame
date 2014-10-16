@@ -7,8 +7,6 @@ import models.TileType;
 import models.Direction;
 
 public class MotionController {
-	
-	public static final int MILLIS_BETWEEN_MOVES = 100;
 
 	private ViewableMapController mapCtrl;
 	public Player player;
@@ -27,9 +25,16 @@ public class MotionController {
 		lastMoveTime = System.currentTimeMillis();
 		this.mapCtrl = mapCtrl;
 		this.map = mapCtrl.getViewableArea();
-		this.player = new Player(mapCtrl.getCenterPoint());
+		this.player = new Player(1,10,1,10,mapCtrl.getCenterPoint());
 		cameraMovesLeft = cameraMovesRight = cameraMovesUp = cameraMovesDown = 0;
 		needsReCenter = false;
+	}
+	
+	public long millisBetweenMoves(){
+		if(200 - (10 * player.speed) >= 100)
+			return 200 - (10 * player.speed);
+		
+		return 100;
 	}
 	
 	public boolean canMoveLeft(){
@@ -90,7 +95,7 @@ public class MotionController {
 
 	public Map movePlayerLeft(){
 
-		if(System.currentTimeMillis() - lastMoveTime >= MILLIS_BETWEEN_MOVES){
+		if(System.currentTimeMillis() - lastMoveTime >= millisBetweenMoves()){
 
 			player.setDirection(Direction.Left);
 
@@ -99,7 +104,7 @@ public class MotionController {
 				lastMoveTime = System.currentTimeMillis();
 				
 				if((mapCtrl.isOnLeftBorder() && player.position.x - 1 >= 0) || (mapCtrl.isOnRightBorder() && mapCtrl.getCenterPoint().x < player.position.x))
-					player.moveLeft();
+					player.moveLeft(true);
 
 				else if(player.position.x == mapCtrl.getCenterPoint().x)
 					return moveLeft();
@@ -112,7 +117,7 @@ public class MotionController {
 
 	public Map movePlayerRight(){
 		
-		if(System.currentTimeMillis() - lastMoveTime >= MILLIS_BETWEEN_MOVES){
+		if(System.currentTimeMillis() - lastMoveTime >= millisBetweenMoves()){
 
 			player.setDirection(Direction.Right);
 
@@ -121,9 +126,9 @@ public class MotionController {
 				lastMoveTime = System.currentTimeMillis();
 
 				if((mapCtrl.isOnRightBorder() &&  player.position.x + 1 <= 2 * mapCtrl.getDimensions().width) || (mapCtrl.isOnLeftBorder() && mapCtrl.getCenterPoint().x > player.position.x))
-					player.moveRight();
+					player.moveRight(true);
 
-				else if(player.position.x == mapCtrl.getCenterPoint().x)
+				else
 					return moveRight();
 			}
 		}
@@ -133,7 +138,7 @@ public class MotionController {
 
 	public Map movePlayerDown(){
 
-		if(System.currentTimeMillis() - lastMoveTime >= MILLIS_BETWEEN_MOVES){
+		if(System.currentTimeMillis() - lastMoveTime >= millisBetweenMoves()){
 
 			player.setDirection(Direction.Down);
 
@@ -142,9 +147,9 @@ public class MotionController {
 				lastMoveTime = System.currentTimeMillis();
 
 				if((mapCtrl.isOnLowerBorder() && player.position.y + 1 <= 2 * mapCtrl.getDimensions().height) || (mapCtrl.isOnUpperBorder() && mapCtrl.getCenterPoint().y > player.position.y))
-					player.moveDown();
+					player.moveDown(true);
 
-				else if(player.position.y == mapCtrl.getCenterPoint().y)
+				else
 					return moveDown();
 			}
 		}
@@ -153,7 +158,7 @@ public class MotionController {
 	}
 
 	public Map movePlayerUp(){
-		if(System.currentTimeMillis() - lastMoveTime >= MILLIS_BETWEEN_MOVES){
+		if(System.currentTimeMillis() - lastMoveTime >= millisBetweenMoves()){
 
 			player.setDirection(Direction.Up);
 
@@ -162,9 +167,9 @@ public class MotionController {
 				lastMoveTime = System.currentTimeMillis();
 				
 				if((mapCtrl.isOnUpperBorder() && player.position.y - 1 >= 0) || (mapCtrl.isOnLowerBorder() && mapCtrl.getCenterPoint().y < player.position.y))
-					player.moveUp();
+					player.moveUp(true);
 
-				else if(player.position.y == mapCtrl.getCenterPoint().y)
+				else
 					return moveUp();
 			}
 		}
@@ -174,7 +179,7 @@ public class MotionController {
 
 	public Map moveMapLeft(){
 		if(!mapCtrl.isOnLeftBorder()){
-			player.moveRight();
+			player.moveRight(false);
 			cameraMovesLeft++;
 			needsReCenter = true;
 		}
@@ -185,7 +190,7 @@ public class MotionController {
 
 	public Map moveMapRight(){
 		if(!mapCtrl.isOnRightBorder()){
-			player.moveLeft();
+			player.moveLeft(false);
 			cameraMovesRight++;
 			needsReCenter = true;
 		}
@@ -196,7 +201,7 @@ public class MotionController {
 
 	public Map moveMapUp(){
 		if(!mapCtrl.isOnUpperBorder()){
-			player.moveDown();
+			player.moveDown(false);
 			cameraMovesUp++;
 			needsReCenter = true;
 		}
@@ -207,7 +212,7 @@ public class MotionController {
 
 	public Map moveMapDown(){
 		if(!mapCtrl.isOnLowerBorder()){
-			player.moveUp();
+			player.moveUp(false);
 			cameraMovesDown++;
 			needsReCenter = true;
 		}
@@ -242,22 +247,22 @@ public class MotionController {
 	public void reCenterCamera(){
 		while(cameraMovesLeft > 0){
 			moveRight();
-			player.moveLeft();
+			player.moveLeft(false);
 			cameraMovesLeft--;
 		}
 		while(cameraMovesRight > 0){
 			moveLeft();
-			player.moveRight();
+			player.moveRight(false);
 			cameraMovesRight--;
 		}
 		while(cameraMovesUp > 0){
 			moveDown();
-			player.moveUp();
+			player.moveUp(false);
 			cameraMovesUp--;
 		}
 		while(cameraMovesDown > 0){
 			moveUp();
-			player.moveDown();
+			player.moveDown(false);
 			cameraMovesDown--;
 		}
 		needsReCenter = false;

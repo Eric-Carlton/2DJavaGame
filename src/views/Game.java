@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import models.Direction;
 
@@ -23,7 +24,10 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 
 	private Level curLevel;
 	private BorderLayout layoutManager;
-	private static long lastTick;
+	private long lastTick;
+	private int fps;
+	private long seconds;
+	
 	
 	Game(){
 		super("Awesome Game!");
@@ -150,13 +154,14 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 		game.setVisible(true);
 		game.requestFocus();
 		game.startTicking();
-		while(true){
-			game.tick();
-		}
 	}
 
 	public void startTicking(){
-		lastTick = System.currentTimeMillis();
+		seconds = lastTick = System.currentTimeMillis();
+		fps = 0;
+		while(true){
+			tick();
+		}
 	}
 
 	public void tick(){
@@ -166,6 +171,12 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 		if(curTime - lastTick >= 1000/desiredFPS){
 			curLevel.repaint();
 			lastTick = curTime;
+			fps++;
+		}
+		if(curTime - seconds >= 1000){
+			this.setTitle("Awesome Game ( " + fps + " ) fps");
+			seconds = curTime;
+			fps = 0;
 		}
 	}
 	

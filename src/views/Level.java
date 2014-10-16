@@ -42,7 +42,7 @@ public class Level extends JPanel {
 		motionController = new MotionController(mapController);
 
 		setPreferredSize(new Dimension(map.getCols() * map.getTileSize().width,map.getRows() * map.getTileSize().height));
-	}
+		}
 
 	@Override
 	public void paint(Graphics g) {

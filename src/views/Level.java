@@ -45,7 +45,7 @@ public class Level extends JPanel {
 		}
 
 	@Override
-	public void paint(Graphics g) {
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		for(int y = 0; y < map.getRows(); y++){
 			for(int x = 0; x < map.getCols(); x++){
@@ -209,7 +209,7 @@ public class Level extends JPanel {
 			
 			System.out.printf("Finding a path from (%d,%d) to (%d,%d)...\n", origin.x, origin.y, dest.x, dest.y);
 			
-			long start = System.currentTimeMillis();
+			long start = System.nanoTime();
 			beenToTile[origin.y][origin.x] = true; 
 			//haven't reach destination
 			while(origin.x != dest.x || origin.y != dest.y){
@@ -434,9 +434,9 @@ public class Level extends JPanel {
 					else return;
 				}
 			}
-			long end = System.currentTimeMillis();
+			long end = System.nanoTime();
 			
-			System.out.printf("Time to find path: %d millis\n\n", end - start);
+			System.out.printf("Time to find path: %d ns ( %.3f ms)\n\n", end - start, ((double)end - (double)start) / 1000000.0);
 		}
 
 		private boolean possibleToMoveUpFromTileLocation(Point p){

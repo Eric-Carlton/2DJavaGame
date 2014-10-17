@@ -106,7 +106,7 @@ public class MotionController {
 				if((mapCtrl.isOnLeftBorder() && player.position.x - 1 >= 0) || (mapCtrl.isOnRightBorder() && mapCtrl.getCenterPoint().x < player.position.x))
 					player.moveLeft(true);
 
-				else if(player.position.x == mapCtrl.getCenterPoint().x)
+				else
 					return moveLeft();
 			}
 		}

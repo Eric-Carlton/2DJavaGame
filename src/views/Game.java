@@ -11,13 +11,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
-import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import models.Direction;
+import models.Player;
 
 
 public class Game extends JFrame implements MouseWheelListener, MouseListener {
@@ -27,6 +26,8 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 
 
 	private Level curLevel;
+	private Player player;
+	
 	private BorderLayout layoutManager;
 	private int fps;
 	private long lastFpsTime;
@@ -37,8 +38,9 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 	Game(){
 		super("Awesome Game!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		curLevel = new Level(new File("Levels/Level1.txt"));
+		
+		player = new Player();
+		curLevel = new Level(new File("Levels/Level1.txt"), player);
 
 		layoutManager = new BorderLayout();
 		setLayout(layoutManager);
@@ -228,10 +230,10 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 					fps = 0;
 				}
 
-
-
-				// draw everything
-				render();
+				// update everything
+				curLevel.updateModels();
+				//draw everything
+				curLevel.render();
 
 				// we want each frame to take 10 milliseconds, to do this
 				// we've recorded when we started the frame. We add 10 milliseconds
@@ -254,7 +256,11 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 		else{
 			paused = true;
 			
-			pausedLbl.setBounds(curLevel.getWidth()/2 - 50, curLevel.getHeight()/2 - 50, 100, 100);
+			curLevel.interruptAllMovementThreads();
+			
+			pausedLbl.setText("<html>PAUSED<br />	Strength: "+player.strength+"<br />HP: "+player.hp+"<br />Defense: "+player.defense+"<br />Speed: "+player.speed+"</html>");
+			
+			pausedLbl.setBounds(curLevel.getWidth()/2 - 50, curLevel.getHeight()/2 - 75, 100, 150);
 			
 			Font font = new Font("TIMES NEW ROMAN", Font.BOLD, 20);
 			pausedLbl.setFont(font);
@@ -265,11 +271,8 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 			repaint();
 		}
 	}
-	
-	public void render(){
-		curLevel.repaint();
-	}
 
+	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 
@@ -294,16 +297,12 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent click) {
-
 		if(!paused){
-			views.Level.AutoMover autoMover = curLevel.new AutoMover();
 
 			Point clickedPoint = click.getPoint();
 			Point tileLocRelativeToViewableScreen = new Point( clickedPoint.x / curLevel.tileSize.width, clickedPoint.y / curLevel.tileSize.height);
-
-			LinkedList<Direction> path = autoMover.getPlayerPathToTileLocation(curLevel.getTileLocInFullMap(tileLocRelativeToViewableScreen));
-
-			curLevel.moveAlongPath(path);
+			
+			curLevel.attemptAutoMovePlayerToPoint(tileLocRelativeToViewableScreen);
 		}
 	}
 

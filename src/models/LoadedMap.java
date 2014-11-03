@@ -122,7 +122,7 @@ public class LoadedMap extends Map {
 			baseTiles[2] = tiles[y][x-1];
 			baseTiles[3] = tile;
 			
-			Base b = new Base(baseTiles, 0);
+			Base b = new Base(baseTiles);
 			
 			addBase(b);
 			break;

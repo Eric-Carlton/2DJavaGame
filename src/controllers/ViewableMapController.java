@@ -4,9 +4,11 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import models.BadDimensionException;
+import models.Base;
 import models.LoadedMap;
 import models.Map;
 import models.MutableMap;
+import models.Tile;
 
 public class ViewableMapController {
 	
@@ -101,6 +103,12 @@ public class ViewableMapController {
 		p = correctPoint(p);
 		if (viewableArea == null || !p.equals(start)){
 			
+			for(int i = 0; i < map.getRows(); i++){
+				for(int j = 0; j < map.getCols(); j++){
+					map.tileAt(i, j).isVisible = false;
+				}
+			}
+			
 			MutableMap mMap = new MutableMap((2*dim.width)+1, (2*dim.height)+1, map.getTileSize(), map.getBases());
 			
 			pointInMapForTopLeftOfViewable = new Point(p.x - dim.width, p.y - dim.height);
@@ -110,6 +118,20 @@ public class ViewableMapController {
 					if(map.tileAt(y, x) == null){
 						System.out.printf("x: %d y: %d\n\n", x, y);
 						map.dump();
+					}
+					map.tileAt(y, x).isVisible = true;
+					
+					/*
+					 * A base is considered one atomic unit that should load at once.
+					 * Therefore, if any tile of a base is visible then
+					 * all tiles in that base should be considered visible even if they won't be drawn.
+					 */
+					for(Base b : map.getBases()){
+						if(b.isTileInBase(y, x)){
+							for(Tile t : b.getBaseTiles()){
+								t.isVisible = true;
+							}
+						}
 					}
 					mMap.addTile(map.tileAt(y, x));
 				}

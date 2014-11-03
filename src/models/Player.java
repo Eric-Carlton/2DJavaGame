@@ -9,9 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Player extends Person {
-	
-	private BufferedImage spriteSheet;
+public class Player extends Sprite {
 	
 	public Player(){
 		this(new Point(0,0));

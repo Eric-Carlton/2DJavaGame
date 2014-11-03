@@ -3,12 +3,13 @@ package models;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-public class Person {
+public class Sprite {
 	
 	public int strength;
 	public int hp;
 	public int defense;
 	public int speed;
+	public long lastMoveTime;
 	
 	public Point position;
 	
@@ -24,9 +25,10 @@ public class Person {
 	
 	private Direction direction;
 	
-	BufferedImage currentImage;
+	protected BufferedImage spriteSheet;
+	protected BufferedImage currentImage;
 	
-	public Person(int strength, int hp, int defense, int speed, Point position){
+	public Sprite(int strength, int hp, int defense, int speed, Point position){
 		this.strength = strength;
 		this.hp = hp;
 		this.defense = defense;
@@ -102,7 +104,13 @@ public class Person {
 	public BufferedImage getCurrentImage(){
 		return this.currentImage;
 	}
-	
-	
 
+	public void setPosition(Point p){
+		this.position = p;
+	}
+	
+	public Point getPosition(){
+		return this.position;
+	}
+	
 }

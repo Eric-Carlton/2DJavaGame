@@ -1,25 +1,17 @@
 package models;
 
-import java.util.ArrayList;
-
 public class Base {
 	
 	private Tile[] baseTiles;
-	private ArrayList<Soldier> soldiers;
 	private Player owner;
 	
-	public Base(Tile[] baseTiles, int initialSoldiers){
+	public Base(Tile[] baseTiles){
 		this.baseTiles = baseTiles;
-		soldiers = new ArrayList<Soldier>();
 		owner = null;
 	}
 	
 	public Tile[] getBaseTiles(){
 		return baseTiles;
-	}
-	
-	public ArrayList<Soldier> getSoldiers(){
-		return soldiers;
 	}
 	
 	public Player getOwner(){
@@ -41,7 +33,6 @@ public class Base {
 	
 	public void dump(){
 		System.out.printf("Owner: %s\n", this.owner);
-		System.out.printf("Number of Soldiers: %d\n", this.soldiers.size());
 		for( Tile t : baseTiles){
 			t.dump();
 		}

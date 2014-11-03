@@ -8,6 +8,9 @@ public class Tile {
 	private TileType type;
 	private int rowInMap;
 	private int colInMap;
+	public boolean isNPCAnchor;
+	public boolean isVisible;
+	public boolean hasSprite;
 	
 	private BufferedImage image;
 	
@@ -16,6 +19,8 @@ public class Tile {
 		this.colInMap = colInMap;
 		this.type = type;
 		this.image = image;
+		this.isNPCAnchor = false;
+		this.isVisible = false;
 	}
 	
 	public int getRowInMap(){
@@ -36,5 +41,19 @@ public class Tile {
 	
 	public void dump(){
 		System.out.printf("\nRow: %d\nCol: %d\nType: %s\n", rowInMap, colInMap, type.toString());
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		       if (!(obj instanceof Tile))
+		            return false;
+		        if (obj == this)
+		            return true;
+
+		        Tile compare = (Tile)obj;
+		        
+		        if(this.getColInMap() == compare.getColInMap() && this.getRowInMap() == compare.getRowInMap())
+		        	return true;
+		        else return false;
 	}
 }

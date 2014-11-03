@@ -26,7 +26,7 @@ public class Soldier extends Sprite {
 	}
 	
 	public void dump(){
-		System.out.printf("\nPlayer\n------\nX: %d\nY: %d\nStrength: %d\nHP: %d\nDefense: %d\nDirection: %s\n", position.x,position.y,strength,hp,defense,getDirection());
+		System.out.printf("\nSoldier\n------\nX: %d\nY: %d\nStrength: %d\nHP: %d\nDefense: %d\nDirection: %s\n", position.x,position.y,strength,hp,defense,getDirection());
 	}
 	
 	public Direction getStep(){

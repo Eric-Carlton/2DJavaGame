@@ -19,7 +19,7 @@ public class PlayerMotionController {
 	private boolean needsReCenter;
 
 	public PlayerMotionController(ViewableMapController mapCtrl, Player player){
-		player.lastMoveTime = System.currentTimeMillis();
+		player.lastMoveTime = System.nanoTime();
 		this.mapCtrl = mapCtrl;
 		this.viewableMap = mapCtrl.getViewableArea();
 		this.player = player;
@@ -28,16 +28,17 @@ public class PlayerMotionController {
 		needsReCenter = false;
 	}
 
-	public long millisBetweenMoves(){
-		if(200 - (10 * player.speed) >= 100)
-			return 200 - (10 * player.speed);
-
-		return 100;
+	public long nanosBetweenMoves(){
+		if(200000000L - (10000000L * player.speed) >= 10000000L){
+			return 200000000L - (10000000L * player.speed);
+		}
+			
+		return 10000000L;
 	}
 
 	public boolean canMoveLeft(){
 
-		if(System.currentTimeMillis() - player.lastMoveTime >= millisBetweenMoves()){
+		if(System.nanoTime() - player.lastMoveTime >= nanosBetweenMoves()){
 			if(needsReCenter)
 				reCenterCamera();
 
@@ -53,7 +54,7 @@ public class PlayerMotionController {
 
 	public boolean canMoveRight(){
 
-		if(System.currentTimeMillis() - player.lastMoveTime >= millisBetweenMoves()){
+		if(System.nanoTime() - player.lastMoveTime >= nanosBetweenMoves()){
 			if(needsReCenter)
 				reCenterCamera();
 
@@ -69,7 +70,7 @@ public class PlayerMotionController {
 
 	public boolean canMoveUp(){
 
-		if(System.currentTimeMillis() - player.lastMoveTime >= millisBetweenMoves()){
+		if(System.nanoTime() - player.lastMoveTime >= nanosBetweenMoves()){
 			if(needsReCenter)
 				reCenterCamera();
 
@@ -87,7 +88,7 @@ public class PlayerMotionController {
 
 	public boolean canMoveDown(){
 
-		if(System.currentTimeMillis() - player.lastMoveTime >= millisBetweenMoves()){
+		if(System.nanoTime() - player.lastMoveTime >= nanosBetweenMoves()){
 
 			if(needsReCenter)
 				reCenterCamera();

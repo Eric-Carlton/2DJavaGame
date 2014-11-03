@@ -61,7 +61,7 @@ public class ViewableMapController {
 		return new Point(dim.width, dim.height);
 	}
 	
-	public LoadedMap getMap(){
+	public Map getMap(){
 		return map;
 	}
 	

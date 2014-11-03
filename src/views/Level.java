@@ -42,7 +42,7 @@ public class Level extends JPanel {
 		this.player = player;
 		try {
 			long started = System.currentTimeMillis();
-			mapController = new ViewableMapController(new LoadedMap(mapFile, tileSize), new Dimension(10,8), new Point(0,0));
+			mapController = new ViewableMapController(new LoadedMap(mapFile, tileSize), new Dimension(9,7), new Point(0,0));
 			long done = System.currentTimeMillis();
 			System.out.printf("Time to load map: %d millis\n\n", done-started);
 		} catch (BadDimensionException e) {
@@ -82,9 +82,9 @@ public class Level extends JPanel {
 			Point soldierViewableTile = getTileLocFromFullMapLoc(s.position);
 			
 			int soldierX = (soldierViewableTile.x * map.tileSize.width);
-			int soldierY = (soldierViewableTile.y * map.tileSize.width);
+			int soldierY = (soldierViewableTile.y * map.tileSize.height);
 			
-			g.drawOval(soldierX, soldierY, map.tileSize.width, map.tileSize.width);
+			g.drawOval(soldierX, soldierY, map.tileSize.width, map.tileSize.height);
 		}
 	}
 	
@@ -99,8 +99,12 @@ public class Level extends JPanel {
 	public void movePlayerUp(){
 		try{
 			while(!Thread.currentThread().isInterrupted()){
+				Point playerPos = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 				map = playerMotionController.movePlayerUp();
-				Thread.sleep(playerMotionController.millisBetweenMoves());
+				Point playerPosAfterMove = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
+				Thread.sleep(playerMotionController.nanosBetweenMoves() / 1000000);
 			}
 		}catch(Exception e){
 			Thread.currentThread().interrupt();
@@ -110,8 +114,12 @@ public class Level extends JPanel {
 	public void movePlayerLeft(){
 		try{
 			while(!Thread.currentThread().isInterrupted()){
+				Point playerPos = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 				map = playerMotionController.movePlayerLeft();
-				Thread.sleep(playerMotionController.millisBetweenMoves());
+				Point playerPosAfterMove = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
+				Thread.sleep(playerMotionController.nanosBetweenMoves() / 1000000);
 			}
 		}catch(Exception e){
 			Thread.currentThread().interrupt();
@@ -121,8 +129,12 @@ public class Level extends JPanel {
 	public void movePlayerDown(){
 		try{
 			while(!Thread.currentThread().isInterrupted()){
+				Point playerPos = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 				map = playerMotionController.movePlayerDown();
-				Thread.sleep(playerMotionController.millisBetweenMoves());
+				Point playerPosAfterMove = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
+				Thread.sleep(playerMotionController.nanosBetweenMoves() / 1000000);
 			}
 		}catch(Exception e){
 			Thread.currentThread().interrupt();
@@ -132,8 +144,12 @@ public class Level extends JPanel {
 	public void movePlayerRight(){
 		try{
 			while(!Thread.currentThread().isInterrupted()){
+				Point playerPos = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 				map = playerMotionController.movePlayerRight();
-				Thread.sleep(playerMotionController.millisBetweenMoves());
+				Point playerPosAfterMove = getTileLocInFullMap(player.position);
+				mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
+				Thread.sleep(playerMotionController.nanosBetweenMoves() / 1000000);
 			}
 		}catch(Exception e){
 			Thread.currentThread().interrupt();
@@ -141,19 +157,35 @@ public class Level extends JPanel {
 	}
 
 	public void moveMapUp(){
+		Point playerPos = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 		map = playerMotionController.moveMapUp();
+		Point playerPosAfterMove = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 	}
 
 	public void moveMapLeft(){
+		Point playerPos = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 		map = playerMotionController.moveMapLeft();
+		Point playerPosAfterMove = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 	}
 
 	public void moveMapDown(){
+		Point playerPos = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 		map = playerMotionController.moveMapDown();
+		Point playerPosAfterMove = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 	}
 
 	public void moveMapRight(){
+		Point playerPos = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 		map = playerMotionController.moveMapRight();
+		Point playerPosAfterMove = getTileLocInFullMap(player.position);
+		mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 	}
 	
 	public void interruptAllMovementThreads(){
@@ -166,11 +198,10 @@ public class Level extends JPanel {
 		for(int y = 0; y < mapController.getMap().getRows(); y++){
 			for(int x = 0; x < mapController.getMap().getCols(); x++){
 				Tile t = mapController.getMap().tileAt(y,x);
-				t.hasSprite = false;
-				if(t.isNPCAnchor && !t.isVisible){
+				if(!t.isVisible){
 					unloadNPCAnchoredAt(t);
 				}
-				if(t.isVisible){
+				else{
 					for(Base b : map.getBases()){
 						if(b.isTileInBase(y, x)){
 							if(!t.isNPCAnchor){
@@ -178,17 +209,16 @@ public class Level extends JPanel {
 							}
 						}
 					}
-					for(Soldier s : soldiers){
-						if(npcMotionController.timeToMove(s)){
-							npcMotionController.moveSprite(s, s.getStep());
-						}
-						if(s.position.x == x && s.position.y == y){
-							if(!t.hasSprite)
-								t.hasSprite = true;
-						}
-					}
 				}
 			}
+		}
+		for(Soldier s : soldiers){
+			if(npcMotionController.timeToMove(s)){
+				mapController.getMap().tileAt(s.position.y, s.position.x).hasSprite = false;
+				npcMotionController.moveSpriteDirection(s, s.getStep());
+				mapController.getMap().tileAt(s.position.y, s.position.x).hasSprite = true;
+			}
+			
 		}
 	}
 	
@@ -215,23 +245,40 @@ public class Level extends JPanel {
 				try{
 					while(!path.isEmpty()){
 						Direction d = path.removeFirst();
-						
+						Point playerPos;
+						Point playerPosAfterMove;
 						switch(d){
 						case Up:
+							playerPos = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 							map = playerMotionController.movePlayerUp();
+							playerPosAfterMove = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 							break;
 						case Down:
+							playerPos = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 							map = playerMotionController.movePlayerDown();
+							playerPosAfterMove = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 							break;
 						case Left:
+							playerPos = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 							map = playerMotionController.movePlayerLeft();
+							playerPosAfterMove = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 							break;
 						case Right:
+							playerPos = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPos.y, playerPos.x).hasSprite = false;
 							map = playerMotionController.movePlayerRight();
+							playerPosAfterMove = getTileLocInFullMap(player.position);
+							mapController.getMap().tileAt(playerPosAfterMove.y, playerPosAfterMove.x).hasSprite = true;
 							break;
 						}
 						
-						Thread.sleep(playerMotionController.millisBetweenMoves());
+						Thread.sleep(playerMotionController.nanosBetweenMoves() / 1000000);
 					}
 				}catch(Exception e){
 					Thread.currentThread().interrupt();
@@ -293,6 +340,7 @@ public class Level extends JPanel {
 			Tile anchor = s.getAnchor();
 			if(anchor.equals(t)){
 				System.out.printf("\nUnloading sprite anchored at (%d,%d)\n",t.getColInMap(), t.getRowInMap());
+				mapController.getMap().tileAt(s.position.y, s.position.x).hasSprite = false;
 				iterator.remove();
 				t.isNPCAnchor = false;
 			}

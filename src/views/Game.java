@@ -21,7 +21,7 @@ import models.Player;
 
 public class Game extends JFrame implements MouseWheelListener, MouseListener {
 	private static final long serialVersionUID = 1L;
-	final int TARGET_FPS = 60;
+	final int TARGET_FPS = 30;
 	final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;  
 
 

@@ -69,44 +69,52 @@ public class Game extends JFrame implements MouseWheelListener, MouseListener {
 				if(!paused){
 					switch( keyCode ) { 
 					case KeyEvent.VK_W:
-
-						up = new Thread(){
-							public void run(){
-								curLevel.movePlayerUp();
-							}
-						};
-						up.start();
+						
+						if( up == null || !up.isAlive()){
+							up = new Thread(){
+								public void run(){
+									curLevel.movePlayerUp();
+								}
+							};
+							up.start();
+						}
 
 						break;
 					case KeyEvent.VK_A:
-
-						left = new Thread(){
-							public void run(){
-								curLevel.movePlayerLeft();
-							}
-						};
-						left.start();
+						
+						if( left == null || !left.isAlive()){
+							left = new Thread(){
+								public void run(){
+									curLevel.movePlayerLeft();
+								}
+							};
+							left.start();
+						}
 
 						break;
 					case KeyEvent.VK_S:
 
-						down = new Thread(){
-							public void run(){
-								curLevel.movePlayerDown();
-							}
-						};
-						down.start();
+						if (down == null || !down.isAlive()){
+							down = new Thread(){
+								public void run(){
+									curLevel.movePlayerDown();
+								}
+							};
+							down.start();
+						}
 
 						break;
 					case KeyEvent.VK_D:
 
-						right = new Thread(){
-							public void run(){
-								curLevel.movePlayerRight();
-							}
-						};
-						right.start();
-						break;
+						if(right == null || !right.isAlive()){
+							right = new Thread(){
+								public void run(){
+									curLevel.movePlayerRight();
+								}
+							};
+							right.start();
+							break;
+						}
 
 					case KeyEvent.VK_UP:
 						curLevel.moveMapUp();

@@ -1,7 +1,7 @@
 2DJavaGame
 ==========
 
-My first 2D Java game, attempted through trial and error
+My first 2D Java game, attempted through trial and error small change for git testing
 
 Disclaimer
 -----------
